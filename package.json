@@ -1,0 +1,36 @@
+{
+  "name": "healthcare_backend",
+  "version": "1.0.0",
+  "description": "health care professionals verification blockchian project",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/index.js",
+    "start": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4th-year-Squad/healthcare_backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/4th-year-Squad/healthcare_backend/issues"
+  },
+  "homepage": "https://github.com/4th-year-Squad/healthcare_backend#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "envalid": "^7.2.2",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.1",
+    "mongoose-paginate-v2": "^1.4.2",
+    "mongoose-unique-validator": "^3.0.0",
+    "multer": "^1.4.4"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.15"
+  }
+}
