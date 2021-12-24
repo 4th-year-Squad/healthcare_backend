@@ -14,6 +14,13 @@ const env = cleanEnv(process.env, {
 
 const user = new mongoose.Schema(
   {
+    firstName: String,
+    lastName: String,
+    // address: Address,
+    email: {
+      type: String,
+      unique: true,
+    },
     phoneNumber: {
       type: String,
       unique: true,
@@ -21,6 +28,40 @@ const user = new mongoose.Schema(
     password: {
       type: String,
       select: false,
+    },
+    bloodType: {
+      type: String,
+      enum: ["A-", "B-", "AB-", "O-", "A+", "B+", "AB+", "O+"],
+    },
+    city: String,
+    subCity: String,
+    woreda: String,
+    geoLocation: {
+      type: {
+        type: String,
+        default: "Point",
+        enum: ["Point"],
+      },
+      coordinates: [Number],
+      name: {
+        type: String,
+      },
+    },
+    resetPasswordToken: {
+      type: String,
+      select: false,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      select: false,
+    },
+    profilePicture: {
+      type: String,
+      default: "profile.png",
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
     isActive: {
       type: Boolean,
@@ -40,6 +81,8 @@ const user = new mongoose.Schema(
     discriminatorKey: "kind",
   }
 );
+
+user.index({ geoLocation: "2dsphere" });
 
 user.pre("save", async function (next) {
   if (this.isModified("password")) {
@@ -70,17 +113,21 @@ user.statics.getToken = function (id) {
   });
 };
 schema.statics.verifyToken = function (token) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const payload = await promisify(jwt.verify)(token, env.JWT_SECRET_KEY);
-        resolve(payload);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  };
+  return new Promise(async (resolve, reject) => {
+    try {
+      const payload = await promisify(jwt.verify)(token, env.JWT_SECRET_KEY);
+      resolve(payload);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+schema.methods.generatePasswordReset = function () {
+  this.resetPasswordToken = crypto.randomBytes(20).toString("hex");
+  this.resetPasswordExpires = Date.now() + 3600000;
+};
 user.plugin(mongoosePaginate);
-user.plugin(mongooseUniqueValidator);
+// user.plugin(mongooseUniqueValidator);
 
 const User = mongoose.model(MODEL_TYPES.USER, user);
 module.exports = User;

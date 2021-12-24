@@ -4,6 +4,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const { cleanEnv, str, url, port } = require("envalid");
 const mongoose = require("mongoose");
+const DefaultRole = require("./utils/defaults");
 
 dotenv.config();
 
@@ -16,6 +17,13 @@ const env = cleanEnv(process.env, {
 mongoose
   .connect(env.DATABASE)
   .then(() => {
+    DefaultRole.createDefaultSuperAdminRole();
+    DefaultRole.createDefaultMohRole();
+    DefaultRole.createDefaultMedicalCenterRole();
+    DefaultRole.createDefaultUniversityEmployeeRole();
+    DefaultRole.createDefalutHealthProfessionalRole();
+    DefaultRole.createDefalutVerifiedHealthProfessionalRole();
+
     console.log("Connected to database");
   })
   .catch((e) => {
